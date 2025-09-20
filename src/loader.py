@@ -1,24 +1,20 @@
 from typing import List, Dict
 from src.db_manager import DBManager
 
-def load_employers(employers: List[Dict]):
+def load_employers(db: DBManager, employers: List[Dict]):
     """Заполняет таблицу employers."""
-    db = DBManager()
     for emp in employers:
-        db.insert_employer(emp["id"], emp["name"], emp.get("alternate_url"))
-    db.close()
+        db.insert_employer(emp["id"], emp["name"], emp.get("url"))
 
-def load_vacancies(vacancies: List[Dict]):
+def load_vacancies(db: DBManager, vacancies: List[Dict]):
     """Заполняет таблицу vacancies."""
-    db = DBManager()
     for vac in vacancies:
         salary = vac.get("salary") or {}
         db.insert_vacancy(
             vac["id"],
             vac["employer"]["id"],
-            vac["name"],
-            salary.get("from"),
-            salary.get("to"),
-            vac.get("alternate_url")
+            vac["title"],
+            salary.get("salary_from"),
+            salary.get("salary_to"),
+            vac.get("url")
         )
-    db.close()

@@ -50,7 +50,20 @@ def get_vacancies_data(employers: List[Dict]) -> List[Dict]:
     """Возвращает вакансии для списка работодателей."""
     all_vacancies = []
     for emp in employers:
-        emp_id = emp["id"]
-        vacancies = get_vacancies(emp_id)
-        all_vacancies.extend(vacancies)
+        emp_id = emp.get("id")
+        if not emp_id:
+            continue
+
+        data = get_vacancies(emp_id)  # ваша функция получения вакансий
+
+        # Проверяем, что пришло
+        if isinstance(data, dict):
+            items = data.get("items", [])
+        elif isinstance(data, list):
+            items = data
+        else:
+            items = []
+        if not items:
+            continue  # пропускаем, если вакансий нет
+        all_vacancies.extend(items)
     return all_vacancies

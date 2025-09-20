@@ -3,7 +3,7 @@ from src.api_client import get_employers_data, get_vacancies_data
 from src.loader import load_employers, load_vacancies
 from src.db_manager import DBManager
 from src.interface import user_interface
-
+from src.utils import get_env_variable
 
 def main():
     print("Создание базы данных и таблиц...")
@@ -15,15 +15,23 @@ def main():
     print("Получение вакансий компаний...")
     vacancies = get_vacancies_data(employers)
 
+    db = DBManager(
+        db_name=get_env_variable("DB_NAME"),
+        user=get_env_variable("DB_USER"),
+        password=get_env_variable("DB_PASSWORD"),
+        host=get_env_variable("DB_HOST"),
+        port=get_env_variable("DB_PORT"),
+    )
+
     print("Заполнение таблицы работодателей...")
-    load_employers(employers)
+    load_employers(db, employers)
 
     print("Заполнение таблицы вакансий...")
-    load_vacancies(vacancies)
+    load_vacancies(db, vacancies)
 
     print("\nЗапуск интерфейса пользователя...")
-    db = DBManager()
     user_interface(db)
+
     db.close()
     print("\nРабота завершена.")
 
