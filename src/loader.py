@@ -13,8 +13,8 @@ def load_vacancies(db: DBManager, vacancies: List[Dict]):
         db.insert_vacancy(
             vac["id"],
             vac["employer"]["id"],
-            vac["title"],
-            salary.get("salary_from"),
-            salary.get("salary_to"),
-            vac.get("url")
+            vac["name"],
+            salary.get("from"),
+            salary.get("to"),
+            vac.get("alternate_url")
         )
