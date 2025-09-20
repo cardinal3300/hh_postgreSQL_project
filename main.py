@@ -3,7 +3,6 @@ from src.api_client import get_employers_data, get_vacancies_data
 from src.loader import load_employers, load_vacancies
 from src.db_manager import DBManager
 from src.interface import user_interface
-from src.utils import get_env_variable
 
 def main():
     print("Создание базы данных и таблиц...")
@@ -15,23 +14,22 @@ def main():
     print("Получение вакансий компаний...")
     vacancies = get_vacancies_data(employers)
 
-    db = DBManager(
-        db_name=get_env_variable("DB_NAME"),
-        user=get_env_variable("DB_USER"),
-        password=get_env_variable("DB_PASSWORD"),
-        host=get_env_variable("DB_HOST"),
-        port=get_env_variable("DB_PORT"),
-    )
+    db = DBManager()  # создаём один экземпляр для работы с БД
 
     print("Заполнение таблицы работодателей...")
     load_employers(db, employers)
 
     print("Заполнение таблицы вакансий...")
     load_vacancies(db, vacancies)
+    print(f"Всего добавлено вакансий: {len(vacancies)}")
+
+    # Демонстрация поиска по ключевому слову
+    keyword = input("Введите ключевое слово для поиска вакансий: ").strip()
+    found_vacancies = db.get_vacancies_with_keyword(keyword)
+    print(f"Найдено вакансий с ключевым словом '{keyword}': {len(found_vacancies)}")
 
     print("\nЗапуск интерфейса пользователя...")
     user_interface(db)
-
     db.close()
     print("\nРабота завершена.")
 

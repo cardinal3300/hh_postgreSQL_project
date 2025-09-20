@@ -1,5 +1,7 @@
 import time
+
 import psycopg2
+
 from src.utils import get_env_variable
 
 
