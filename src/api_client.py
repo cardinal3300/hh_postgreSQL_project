@@ -14,14 +14,17 @@ EMPLOYERS_LIST = [
     {"id": 3776, "name": "МТС"},
     {"id": 80, "name": "Альфа-Банк"},
     {"id": 3127, "name": "Мегафон"},
-    {"id": 2748, "name": "Ростелеком"}
+    {"id": 2748, "name": "Ростелеком"},
 ]
+
 
 def get_employer_info(employer_id: int) -> Dict:
     """Получает данные о работодателе по employer_id."""
     response = requests.get(f"{BASE_URL}/employers/{employer_id}")
     if response.status_code != 200:
-        print(f"[WARN] Работодатель {employer_id} не найден, статус {response.status_code}")
+        print(
+            f"[WARN] Работодатель {employer_id} не найден, статус {response.status_code}"
+        )
         return {}
     return response.json()
 
@@ -35,11 +38,7 @@ def get_employers_data() -> List[Dict]:
             continue
         name = data.get("name")
         url = data.get("alternate_url")
-        employers.append({
-            "id": data.get("id"),
-            "name": name,
-            "url": url
-        })
+        employers.append({"id": data.get("id"), "name": name, "url": url})
     return employers
 
 
@@ -51,7 +50,9 @@ def get_vacancies(employer_id: int, per_page: int = 100) -> List[Dict]:
         params = {"employer_id": employer_id, "per_page": per_page, "page": page}
         response = requests.get(f"{BASE_URL}/vacancies", params=params)
         if response.status_code != 200:
-            print(f"[WARN] Не удалось получить вакансии для {employer_id}, статус {response.status_code}")
+            print(
+                f"[WARN] Не удалось получить вакансии для {employer_id}, статус {response.status_code}"
+            )
             return []
         data = response.json()
         vacancies.extend(data.get("items", []))
