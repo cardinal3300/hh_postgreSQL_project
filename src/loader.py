@@ -16,7 +16,7 @@ def load_employers(db: DBManager, employers: List[Dict]):
             db.cur.execute(
                 "INSERT INTO employers (employer_id, name, url) VALUES (%s, %s, %s) "
                 "ON CONFLICT (employer_id) DO NOTHING;",
-                (emp["id"], emp["name"], emp.get("alternate_url"))
+                (emp["id"], emp["name"], emp.get("alternate_url")),
             )
             inserted_count += 1
         except Exception as e:
@@ -46,8 +46,8 @@ def load_vacancies(db: DBManager, vacancies: List[Dict]):
                     vac["name"],
                     salary.get("from"),
                     salary.get("to"),
-                    vac.get("alternate_url")
-                )
+                    vac.get("alternate_url"),
+                ),
             )
             inserted_count += 1
         except Exception as e:
